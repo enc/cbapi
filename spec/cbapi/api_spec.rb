@@ -5,6 +5,7 @@ module Cbapi
 
     let(:url) { "http://api.crunchbase.com/v/1/company/facebook.js" }
     let(:company) { File.open(File.join(File.dirname(__FILE__), "..","json","company.js")).read }
+    let(:companylist) { File.open(File.join(File.dirname(__FILE__), "..","json","lcomp.js")).read }
 
     context "without key" do
 
@@ -37,6 +38,18 @@ module Cbapi
         API.should_receive(:get_url).with(url+"?api_key=vtbn6ju62cp2apg9mjmuva86").and_return(company)
         expect(API.retrieve(url)).to eq(JSON.parse(company))
       end
+    end
+
+    context "get search lists" do
+      before { API.key = "vtbn6ju62cp2apg9mjmuva86" }
+      let(:search_url) { "http://api.crunchbase.com/v/1/search.js?query=instagram&entity=product" }
+      it 'returns an arry of results' do
+        API.should_receive(:get_url).with(search_url+"&api_key=vtbn6ju62cp2apg9mjmuva86").and_return(companylist)
+
+        expect(API.retrieve_page_list(search_url)).to be_an_instance_of(Array)
+      end
+
+
     end
 
   end

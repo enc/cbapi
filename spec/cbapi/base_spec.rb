@@ -3,12 +3,12 @@ require File.join(File.dirname(__FILE__), "..", "spec_helper.rb")
 module Cbapi
   describe Base do
     it 'create company url' do
-      subject.cb_url("company/<>.js")
+      subject.set_entity('company')
       expect(subject.get_url("john")).to eq("http://api.crunchbase.com/v/1/company/john.js")
       expect(subject.get_url("fritz")).to eq("http://api.crunchbase.com/v/1/company/fritz.js")
     end
     it 'create product url' do
-      subject.cb_url("product/<>.js")
+      subject.set_entity('product')
       expect(subject.get_url("john")).to eq("http://api.crunchbase.com/v/1/product/john.js")
       expect(subject.get_url("fritz")).to eq("http://api.crunchbase.com/v/1/product/fritz.js")
     end
@@ -31,6 +31,10 @@ module Cbapi
         subject.define_property :name
         subject.get("facebook")
         expect(subject.name).to eq("Facebook")
+      end
+      it 'can be created with content' do
+        ba = Base.new company
+        expect(ba.entity).to eq(company)
       end
 
     end

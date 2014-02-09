@@ -6,8 +6,14 @@ module Cbapi
       @url = "<>/<>.js"
     end
 
-    def set_entity(name)
+    def self.set_entity(name)
       @e_name = name
+    end
+    def self.ename
+      @e_name
+    end
+    def ename
+      self.class.ename
     end
 
     def cb_url(url_string)
@@ -19,7 +25,7 @@ module Cbapi
     end
 
     def get_url(*parameters)
-      parameters = parameters.unshift @e_name if @e_name
+      parameters = parameters.unshift ename if ename
       "http://api.crunchbase.com/v/1/" + fill_in(parameters)
     end
     def fill_in(parameters)
@@ -29,14 +35,12 @@ module Cbapi
       end
       return result
     end
-    def define_property(name)
-      (class << self; self; end).class_eval do
-        define_method(name) do
-          if @entity
-            @entity[name.to_s]
-          else
-            nil
-          end
+    def self.define_property(name)
+      define_method(name) do
+        if @entity
+          @entity[name.to_s]
+        else
+          nil
         end
       end
     end

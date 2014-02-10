@@ -36,10 +36,21 @@ module Cbapi
       end
       return result
     end
-    def self.define_property(name)
+    def self.define_property(*args)
+        name = args[0]
+        path = [args[0].to_s]
+      if args.size >= 2
+        path = args[1].split('/')
+      end
+
       define_method(name) do
+        t_path = path.clone
         if @entity
-          @entity[name.to_s]
+          ret = @entity
+          while t_path.size > 0
+            ret = ret[t_path.shift]
+          end
+          return ret
         else
           nil
         end

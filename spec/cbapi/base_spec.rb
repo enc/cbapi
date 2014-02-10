@@ -66,5 +66,16 @@ module Cbapi
         subject.get("facebook")
         expect(subject.persons.size).to eq(280)
       end
+
+      it 'accepts deep attributes' do
+        a = Hash.new
+        a['1'] = Hash.new
+        a['1']['2'] = "test"
+        subj = Base.new a
+        subj.class.define_property :test, "1/2"
+        expect(subj.test).to eq("test")
+      end
+    end
+
   end
 end

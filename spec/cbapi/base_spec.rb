@@ -29,6 +29,14 @@ module Cbapi
           expect(ba.entity).to eq(company)
         end
 
+        it 'has images' do
+          API.should_receive(:retrieve).at_least(:once).with("http://api.crunchbase.com/v/1/company/facebook.js").and_return(JSON.parse(company))
+          subject.get "facebook"
+          expect(subject.images).to be_an(Array)
+          expect(subject.images[2]).to eq("http://www.crunchbase.com/assets/images/resized/0000/4561/4561v1-max-450x450.png")
+          expect(subject.images[0]).to eq("http://www.crunchbase.com/assets/images/resized/0000/4561/4561v1-max-150x150.png")
+        end
+
       end
     end
     context 'product' do

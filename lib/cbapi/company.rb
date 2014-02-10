@@ -4,5 +4,6 @@ module Cbapi
     set_entity "company"
     define_property :name
     define_property :overview
+    define_property :crunshbase_url
   end
 end

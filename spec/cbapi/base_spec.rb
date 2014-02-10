@@ -2,6 +2,7 @@ require File.join(File.dirname(__FILE__), "..", "spec_helper.rb")
 
 module Cbapi
   describe Base do
+    let(:company) { File.open(File.join(File.dirname(__FILE__), "..","json","company.js")).read }
     context 'company' do
       subject { class TestCompany < Base;
       set_entity('company');end; TestCompany.new }
@@ -12,7 +13,6 @@ module Cbapi
       end
 
       context "get content" do
-        let(:company) { File.open(File.join(File.dirname(__FILE__), "..","json","company.js")).read }
         it "defines it property" do
 
           subject.class.define_property :name
@@ -48,5 +48,23 @@ module Cbapi
       end
     end
 
+    context "array type" do
+      subject {
+        class ArrayTest < Base
+          set_entity "company"
+        end
+        ArrayTest.new
+      }
+
+      it "can define array type" do
+
+        API.should_receive(:retrieve).at_least(:once).with("http://api.crunchbase.com/v/1/company/facebook.js").and_return(JSON.parse(company))
+        person = double("person")
+        person.should_receive(:new).exactly(280).times
+
+        subject.class.define_array :persons, "relationships", person
+        subject.get("facebook")
+        expect(subject.persons.size).to eq(280)
+      end
   end
 end

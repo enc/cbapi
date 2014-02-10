@@ -4,6 +4,7 @@ module Cbapi
     def initialize(js = nil)
       @entity = js
       @url = "<>/<>.js"
+      @arrbucket = Hash.new
     end
 
     def self.set_entity(name)
@@ -43,6 +44,16 @@ module Cbapi
           nil
         end
       end
+    end
+    def self.define_array container, name, klass
+      define_method(container) do
+        bucket = []
+        @entity[name.to_s].each do |item|
+          bucket << klass.new(item)
+        end
+        @arrbucket[container.to_s] = bucket
+      end
+
     end
     def get(*something)
       @entity = API.retrieve(get_url(*something))

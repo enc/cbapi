@@ -4,6 +4,7 @@ module Cbapi
     def initialize(js = nil)
       @entity = js
       @url = "<>/<>.js"
+      @s_url = "search.js?entity=<>&query=<>&page=<>"
       @arrbucket = Hash.new
     end
 
@@ -21,16 +22,16 @@ module Cbapi
       @url = url_string
     end
 
-    def cb_list_url(url_string)
-
+    def cb_search_url(url_string)
+      @s_url = url_string
     end
 
-    def get_url(*parameters)
+    def get_url(url, *parameters)
       parameters = parameters.unshift ename if ename
-      "http://api.crunchbase.com/v/1/" + fill_in(parameters)
+      "http://api.crunchbase.com/v/1/" + fill_in(url, parameters)
     end
-    def fill_in(parameters)
-      result = @url.clone
+    def fill_in(url, parameters)
+      result = url.clone
       parameters.each do |param|
         result["<>"] = param
       end
@@ -66,8 +67,14 @@ module Cbapi
       end
 
     end
+    def self.define_search *params
+
+    end
+    def search term, page = 1
+      API.retrieve(get_url(@s_url, term, page.to_s))["results"]
+    end
     def get(*something)
-      @entity = API.retrieve(get_url(*something))
+      @entity = API.retrieve(get_url(@url, *something))
     end
     def entity
       @entity

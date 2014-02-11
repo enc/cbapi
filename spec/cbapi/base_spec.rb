@@ -3,6 +3,7 @@ require File.join(File.dirname(__FILE__), "..", "spec_helper.rb")
 module Cbapi
   describe Base do
     let(:company) { File.open(File.join(File.dirname(__FILE__), "..","json","company.js")).read }
+    let(:list_company) { File.open(File.join(File.dirname(__FILE__), "..","json","lcomp.js")).read }
     context 'company' do
       subject { class TestCompany < Base;
       set_entity('company');end; TestCompany.new }
@@ -74,6 +75,30 @@ module Cbapi
         subj = Base.new a
         subj.class.define_property :test, "1/2"
         expect(subj.test).to eq("test")
+      end
+    end
+
+    context "search" do
+      subject { class SearchTest < Base
+                  set_entity "company"
+                end
+                SearchTest.new
+              }
+      it 'can search CB' do
+        API.should_receive(:retrieve).at_least(:once).with("http://api.crunchbase.com/v/1/search.js?entity=company&query=facebook&page=1").and_return(JSON.parse(list_company))
+        subject.class.define_search 'name', 'description'
+
+        result = subject.search("facebook")
+        expect(result).to be_an(Array)
+
+      end
+      it 'finds facebook' do
+        API.should_receive(:retrieve).at_least(:once).with("http://api.crunchbase.com/v/1/search.js?entity=company&query=facebook&page=1").and_return(JSON.parse(list_company))
+        subject.class.define_search 'name', 'description'
+
+        result = subject.search("facebook")
+        expect(result[0]["name"]).to eq("Facebook")
+
       end
     end
 

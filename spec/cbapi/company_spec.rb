@@ -5,7 +5,7 @@ module Cbapi
       it 'has the right url' do
         expect(subject).to respond_to(:name)
         expect(subject).to respond_to(:overview)
-        expect(subject.get_url("facebook")).to eq(company_url)
+        expect(subject.get_url("<>/<>.js", "facebook")).to eq(company_url)
       end
 
     end

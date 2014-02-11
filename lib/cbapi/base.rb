@@ -27,6 +27,7 @@ module Cbapi
     end
 
     def get_url(url, *parameters)
+      url = @url unless url
       parameters = parameters.unshift ename if ename
       "http://api.crunchbase.com/v/1/" + fill_in(url, parameters)
     end
@@ -71,7 +72,12 @@ module Cbapi
 
     end
     def search term, page = 1
-      API.retrieve(get_url(@s_url, term, page.to_s))["results"]
+      set = API.retrieve(get_url(@s_url, term, page.to_s))
+      @ssize = set['total']
+      set["results"].collect do |i|
+        i['smimg'] = extract_image i;
+        i
+      end
     end
     def get(*something)
       @entity = API.retrieve(get_url(@url, *something))
@@ -82,6 +88,17 @@ module Cbapi
     def images
       return nil unless @entity
       @entity["image"]["available_sizes"].collect {|a| "http://www.crunchbase.com/" + a[1]}
+    end
+
+    def size
+      @ssize
+    end
+
+    def extract_image hash
+      return nil unless hash["image"]
+      hash["image"]["available_sizes"].collect {|a| "http://www.crunchbase.com/" + a[1]} .first
+
+
     end
   end
 end

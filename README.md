@@ -1,12 +1,13 @@
 # Cbapi
 
-TODO: Write a gem description
+Interface to Crunchbase. Use to search and view products and
+companies. Not all features supported.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'cbapi'
+    gem 'cbapi', :github => 'enc/cbapi'
 
 And then execute:
 
@@ -14,11 +15,20 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install cbapi
+    $ gem install cbapi, :git => 'git://github.com/enc/cbapi.git'
 
 ## Usage
 
-TODO: Write usage instructions here
+Set your API key.
+  Cbapi::API.key = 'whatever'
+
+Search
+  interface = Cbapi::Search.new
+  interface.search "Facebook"
+
+Get specific Object
+  company = Cbapi::Company.new
+  company.get 'facebook'
 
 ## Contributing
 

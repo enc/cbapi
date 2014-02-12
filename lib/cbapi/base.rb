@@ -3,8 +3,8 @@ module Cbapi
 
     def initialize(js = nil)
       @entity = js
-      @url = "<>/<>.js"
-      @s_url = "search.js?entity=<>&query=<>&page=<>"
+      @url ||= "<>/<>.js"
+      @s_url ||= "search.js?entity=<>&query=<>&page=<>"
       @arrbucket = Hash.new
     end
 
@@ -18,11 +18,11 @@ module Cbapi
       self.class.ename
     end
 
-    def cb_url(url_string)
+    def self.cb_url(url_string)
       @url = url_string
     end
 
-    def cb_search_url(url_string)
+    def self.cb_search_url(url_string)
       @s_url = url_string
     end
 
@@ -31,6 +31,7 @@ module Cbapi
       parameters = parameters.unshift ename if ename
       "http://api.crunchbase.com/v/1/" + fill_in(url, parameters)
     end
+
     def fill_in(url, parameters)
       result = url.clone
       parameters.each do |param|
@@ -38,6 +39,7 @@ module Cbapi
       end
       return result
     end
+
     def self.define_property(*args)
         name = args[0]
         path = [args[0].to_s]
@@ -58,6 +60,7 @@ module Cbapi
         end
       end
     end
+
     def self.define_array container, name, klass
       define_method(container) do
         bucket = []
@@ -68,9 +71,7 @@ module Cbapi
       end
 
     end
-    def self.define_search *params
 
-    end
     def search term, page = 1
       set = API.retrieve(get_url(@s_url, term, page.to_s))
       @ssize = set['total']
@@ -80,6 +81,7 @@ module Cbapi
         i
       end
     end
+
     def get(*something)
       @entity = API.retrieve(get_url(@url, *something))
     end
@@ -102,8 +104,6 @@ module Cbapi
     def extract_image hash
       return nil unless hash["image"]
       hash["image"]["available_sizes"].collect {|a| "http://www.crunchbase.com/" + a[1]} .first
-
-
     end
   end
 end

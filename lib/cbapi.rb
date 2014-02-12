@@ -8,7 +8,7 @@ require "cbapi/milestone"
 require "cbapi/person"
 require "cbapi/company"
 require "cbapi/product"
+require "cbapi/search"
 
 module Cbapi
-  # Your code goes here...
 end

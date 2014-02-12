@@ -86,7 +86,7 @@ module Cbapi
       @entity
     end
     def images
-      return nil unless @entity
+      return nil unless @entity and @entity["image"]
       @entity["image"]["available_sizes"].collect {|a| "http://www.crunchbase.com/" + a[1]}
     end
 

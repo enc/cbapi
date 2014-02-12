@@ -4,6 +4,7 @@ module Cbapi
     set_entity "product"
     define_property :name
     define_property :overview
-    define_property :crunshbase_url
+    define_property :crunchbase_url
+    define_array :milestones, :milestones, Cbapi::Milestone
   end
 end

@@ -74,6 +74,7 @@ module Cbapi
     def search term, page = 1
       set = API.retrieve(get_url(@s_url, term, page.to_s))
       @ssize = set['total']
+      return [] unless set["results"]
       set["results"].collect do |i|
         i['smimg'] = extract_image i;
         i
@@ -91,7 +92,11 @@ module Cbapi
     end
 
     def size
-      @ssize
+      if @ssize
+        @ssize
+      else
+        0
+      end
     end
 
     def extract_image hash

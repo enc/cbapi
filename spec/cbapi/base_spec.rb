@@ -40,6 +40,16 @@ module Cbapi
 
       end
     end
+    context 'failed get' do
+      it 'has sound behaviour on failed get' do
+        API.should_receive(:retrieve).at_least(:once).with("http://api.crunchbase.com/v/1/company/nothing.js").and_return(JSON.parse('{ "error": "Sorry, we could not find the record you were looking for." }'))
+        subject.get 'company', 'nothing'
+        subject.class.define_property :name
+        expect(subject.name).to eq nil
+        expect(subject.images).to eq nil
+      end
+    end
+
     context 'product' do
       subject { class TestProduct < Base;set_entity('product');end; TestProduct.new }
       it 'create product url' do
